@@ -7,9 +7,10 @@ import { UsuarioPayload } from './types/Usuario';
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor() {
         super({
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), 
-        ignoreExpiration: false, 
-        secretOrKey: process.env.JWT_SECRET || 'defaultSecretKey', 
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), 
+            signOptions: { expiresIn: '1h' },
+            ingoreExpiration: false,
+            secretOrKey: process.env.JWT_SECRET || 'defaultSecretKey', 
         });
     }
 
