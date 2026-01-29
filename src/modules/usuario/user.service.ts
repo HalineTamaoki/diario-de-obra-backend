@@ -7,4 +7,9 @@ export class UserService {
     // TODO: add no banco de dados
     return;
   }
+
+  async validarItemObra(idUsuario: number, idItemObra: number): Promise<boolean> {
+    //TODO: consultar se o itemObra pertence ao usuario
+    return true;
+  }  
 }

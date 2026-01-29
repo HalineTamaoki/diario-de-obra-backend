@@ -1,12 +1,45 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
-import { UserModule } from './modules/usuario/user.module';
+import { ExecucaoModule } from './modules/execucao/execucao.module';
+import { FinalizacaoModule } from './modules/finalizacao/finalizacao.module';
+import { IdeacaoModule } from './modules/ideacao/ideacao.module';
+import { ItemObraModule } from './modules/itemObra/itemObra.module';
 import { ObraModule } from './modules/obra/obra.module';
+import { OrcamentoModule } from './modules/orcamento/orcamento.module';
+import { UserModule } from './modules/usuario/user.module';
 
 @Module({
-  imports: [AuthModule, UserModule, ObraModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: +configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_DATABASE'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: false,
+      }),
+      inject: [ConfigService],
+    }),
+    AuthModule, 
+    UserModule, 
+    ObraModule,
+    ItemObraModule,
+    IdeacaoModule,
+    OrcamentoModule,
+    ExecucaoModule,
+    FinalizacaoModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

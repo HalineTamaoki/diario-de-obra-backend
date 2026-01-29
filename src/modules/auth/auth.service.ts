@@ -8,7 +8,7 @@ export class AuthService {
 
   async login(user: Usuario) {
     //TODO: trocar sub pelo id do usuário no banco de dados
-    const payload = { username: user.email, sub: 123 };
+    const payload = { username: user.email, id: 123 };
     const expiresIn = '1h'; 
 
     const accessToken = this.jwtService.sign(payload, { expiresIn });

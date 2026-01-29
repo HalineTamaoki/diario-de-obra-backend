@@ -1,20 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { IdNome } from '../../dto/idNome';
-import { ObraDto } from './dto/obra';
+import { ItemObraDto } from './dto/itemObra';
 
 @Injectable()
-export class ObraService {
-    async get(userId: number): Promise<ObraDto[]> {
+export class ItemObraService {
+    async get(idObra: number, userId: number): Promise<ItemObraDto[]> {
         // TODO: add no banco de dados
         return [];
     }
 
-    async cadastrar(obra: IdNome, userId: number) {
+    async cadastrar(idObra: number, itemObra: IdNome, userId: number) {
         // TODO: add no banco de dados
         return;
     }
 
-    async editar(obra: IdNome, userId: number) {
+    async editar(idObra: number, itemObra: IdNome, userId: number) {
         // TODO: add no banco de dados
         return;
     }
