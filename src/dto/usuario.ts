@@ -1,6 +1,6 @@
-import { IsEmail, IsNotEmpty, Max, MaxLength, Min, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, MaxLength, MinLength } from "class-validator";
 
-export class Usuario {
+export class UsuarioDto {
     @IsNotEmpty({ message: 'O email não pode ser vazio', always: true })
     @IsEmail({}, { message: 'O email deve ser válido', groups: ['create'] })
     email: string;

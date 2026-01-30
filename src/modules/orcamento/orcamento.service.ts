@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { Selecionar } from 'src/dto/selecionar';
-import { UserService } from '../usuario/user.service'; // Importe o UserService
+import { ItemObraService } from '../itemObra/itemObra.service';
 import { OrcamentoDetalhes, OrcamentoResumo } from './dto/orcamento';
 
 @Injectable()
 export class OrcamentoService {
-    constructor(private readonly userService: UserService) {} // Injete o UserService
+    constructor(private readonly itemObraService: ItemObraService) {} 
 
     async validarOrcamento(idOrcamento: number, userId: number): Promise<boolean> {
         // TODO: obter idObra a partir do idOrcamento
         const idObra = 123; 
-        const isValid = await this.userService.validarItemObra(userId, idObra);
+        const isValid = await this.itemObraService.validarItemObra(userId, idObra);
         return isValid;
     }
 
     async get(idItem: number, userId: number): Promise<OrcamentoResumo[]> {
-        const isValid = await this.userService.validarItemObra(userId, idItem);
+        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
         if (!isValid) {
             throw new Error('Usuário não tem acesso a este item.');
         }
@@ -33,7 +33,7 @@ export class OrcamentoService {
     }
 
     async cadastrar(idItem: number, orcamento: OrcamentoDetalhes, userId: number) {
-        const isValid = await this.userService.validarItemObra(userId, idItem);
+        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
         if (!isValid) {
             throw new Error('Usuário não tem acesso a este item.');
         }
@@ -42,7 +42,7 @@ export class OrcamentoService {
     }
 
     async editar(idItem: number, orcamento: OrcamentoDetalhes, userId: number) {
-        const isValid = await this.userService.validarItemObra(userId, idItem);
+        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
         if (!isValid) {
             throw new Error('Usuário não tem acesso a este item.');
         }

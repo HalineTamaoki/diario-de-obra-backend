@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Selecionar } from 'src/dto/selecionar';
-import { UserService } from '../usuario/user.service'; // Importe o UserService
+import { ItemObraService } from '../itemObra/itemObra.service';
 import { EditarComentario, FinalizacaoDto } from './dto/finalizacao';
 
 @Injectable()
 export class FinalizacaoService {
-    constructor(private readonly userService: UserService) {} // Injete o UserService
+    constructor(private readonly itemObraService: ItemObraService) {}
 
     async get(idItem: number, userId: number): Promise<FinalizacaoDto> {
-        const isValid = await this.userService.validarItemObra(userId, idItem);
+        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
         if (!isValid) {
             throw new Error('Usuário não tem acesso a este item.');
         }
@@ -17,7 +17,7 @@ export class FinalizacaoService {
     }
 
     async editarComentario(idItem: number, comentario: EditarComentario, userId: number) {
-        const isValid = await this.userService.validarItemObra(userId, idItem);
+        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
         if (!isValid) {
             throw new Error('Usuário não tem acesso a este item.');
         }
@@ -26,7 +26,7 @@ export class FinalizacaoService {
     }
 
     async selecionarFinalizado(idItem: number, selecionarFinalizado: Selecionar, userId: number) {
-        const isValid = await this.userService.validarItemObra(userId, idItem);
+        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
         if (!isValid) {
             throw new Error('Usuário não tem acesso a este item.');
         }
