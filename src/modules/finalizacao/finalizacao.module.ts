@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ItemObraService } from '../itemObra/itemObra.service';
+import { ItemObraModule } from '../itemObra/itemObra.module';
 import { FinalizacaoController } from './finalizacao.controller';
 import { FinalizacaoService } from './finalizacao.service';
 
 @Module({
-  imports: [],
-  providers: [FinalizacaoService, ItemObraService],
+  imports: [ItemObraModule],
+  providers: [FinalizacaoService],
   controllers: [FinalizacaoController],
 })
 export class FinalizacaoModule {}

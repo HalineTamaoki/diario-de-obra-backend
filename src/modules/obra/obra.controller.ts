@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Request, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
-import { IdNome } from "../../dto/idNome";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Request, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
+import { IdNome, Nome } from "../../dto/idNome";
 import { ObraService } from "./obra.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { Request as RequestType } from "express";
@@ -22,15 +22,14 @@ export class ObraController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(JwtAuthGuard)
     @Post()
-    async cadastrar(@Body() obra: IdNome, @Request() req: AuthRequest) {
-      return this.obraService.cadastrar(obra, req.user.id);
+    @UsePipes(new ValidationPipe({ groups: ['default'] }))
+    async cadastrar(@Body() nomeObra: Nome, @Request() req: AuthRequest) {
+      return this.obraService.cadastrar(nomeObra, req.user.id);
     }
-
     
     @HttpCode(HttpStatus.OK)
     @UseGuards(JwtAuthGuard)
     @Put()
-    @UsePipes(new ValidationPipe({ groups: ['edit'] }))
     async editar(@Body() obra: IdNome, @Request() req: AuthRequest) {
       return this.obraService.editar(obra, req.user.id);
     }
@@ -38,7 +37,7 @@ export class ObraController {
     @HttpCode(HttpStatus.OK)  
     @UseGuards(JwtAuthGuard)
     @Delete(':id')
-    async deletar(@Param('id') id: number, @Request() req: AuthRequest) {
+    async deletar(@Param('id', ParseIntPipe) id: number, @Request() req: AuthRequest) {
       return this.obraService.deletar(id, req.user.id);
     }
 }

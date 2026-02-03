@@ -1,10 +1,11 @@
 import { IsNotEmpty, IsNumber } from "class-validator";
 
-export class IdNome {
-    @IsNumber()
-    @IsNotEmpty({ message: 'O id não pode ser vazio', groups: ['edit'] })
-    id: number;
-
-    @IsNotEmpty({ message: 'O nome não pode ser vazio', groups: ['default'] })
+export class Nome {
+    @IsNotEmpty({ message: 'O nome não pode ser vazio', always: true })
     nome: string;
+}
+
+export class IdNome extends Nome {
+    @IsNumber({}, { message: 'O id deve ser um número', always: true})
+    id: number;
 }

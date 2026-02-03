@@ -12,7 +12,7 @@ export class AuthService {
 
   async login(user: UsuarioDto) {
     const idUsuario = await this.userService.validarUsuario(user);
-    const payload = { username: user.email, id: idUsuario };
+    const payload = { username: user.email, sub: idUsuario };
     const expiresIn = '1h'; 
 
     const accessToken = this.jwtService.sign(payload, { expiresIn });

@@ -1,26 +1,63 @@
-import { Injectable } from '@nestjs/common';
-import { IdNome } from '../../dto/idNome';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { IdNome, Nome } from '../../dto/idNome';
 import { ObraDto } from './dto/obra';
+import { Obra } from './entity/obra.entity';
 
 @Injectable()
 export class ObraService {
-    async get(userId: number): Promise<ObraDto[]> {
-        // TODO: add no banco de dados
-        return [];
+    constructor(
+        @InjectRepository(Obra) private obraRepository: Repository<Obra>,
+    ) {}
+
+    async validarObra(idUsuario: number, idObra: number): Promise<boolean> {
+        const obra = await this.obraRepository.findOne({ where: { id: idObra, usuarioId: idUsuario } });
+        return !!obra;
+    }
+    
+    async get(usuarioId: number): Promise<ObraDto[]> {
+        const obras = await this.obraRepository
+            .createQueryBuilder('obra')
+            .leftJoin('obra.itensObra', 'item') 
+            .select([
+                'obra.id AS id',
+                'obra.nome AS nome',
+                'obra.usuarioId AS usuarioId'
+            ])
+            .addSelect(
+                'ROUND(COALESCE(AVG(item.ultima_etapa / 3.0), 0) * 100, 2)', 
+                'porcentagem'
+            )
+            .where('obra.usuario_id = :usuarioId', { usuarioId })
+            .groupBy('obra.id')
+            .getRawMany();
+
+            return obras.map(obra => ({
+                ...obra,
+                porcentagem: Number(obra.porcentagem)
+            }));
     }
 
-    async cadastrar(obra: IdNome, userId: number) {
-        // TODO: add no banco de dados
-        return;
+    async cadastrar(nomeObra: Nome, userId: number) {
+        const novaObra = this.obraRepository.create({ nome: nomeObra.nome, usuarioId: userId });
+        return this.obraRepository.save(novaObra);
     }
 
     async editar(obra: IdNome, userId: number) {
-        // TODO: add no banco de dados
-        return;
+        const obraDb = await this.obraRepository.findOne({ where: { id: obra.id, usuarioId: userId } });
+        if (!obraDb) {
+            throw new NotFoundException('Obra não encontrada');
+        }
+        this.obraRepository.merge(obraDb, obra);
+        return await this.obraRepository.save(obraDb);
     }
 
     async deletar(idObra: number, userId: number) {
-        // TODO: add no banco de dados
-        return;
+        const result = await this.obraRepository.delete({ id: idObra, usuarioId: userId });
+
+        if (result.affected === 0) {
+            throw new NotFoundException(`Obra com ID ${idObra} não encontrada ou você não tem permissão.`);
+        }
     }
 }

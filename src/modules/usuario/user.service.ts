@@ -8,8 +8,7 @@ import { Usuario } from './entity/user.entity';
 @Injectable()
 export class UserService {
   constructor(
-  @InjectRepository(Usuario)
-    private userRepository: Repository<Usuario>,
+    @InjectRepository(Usuario) private userRepository: Repository<Usuario>,
   ) {}
 
   async cadastrar(user: UsuarioDto) {
