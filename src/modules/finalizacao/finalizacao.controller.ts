@@ -9,7 +9,7 @@ interface AuthRequest extends RequestType {
   user: { id: number; [key: string]: any };
 }
 
-@Controller('execucao')
+@Controller('finalizacao')
 @UseGuards(JwtAuthGuard)
 export class FinalizacaoController {
     constructor(private finalizacaoService: FinalizacaoService) {}

@@ -1,6 +1,6 @@
-import { IsNotEmpty, Max, MaxLength } from "class-validator";
+import { IsNotEmpty, MaxLength } from "class-validator";
 
-export class FinalizacaoDto {
+export type FinalizacaoType = {
     id: number;
     data: Date;
     comentarios: string;

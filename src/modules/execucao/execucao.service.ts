@@ -20,8 +20,8 @@ export class ExecucaoService {
             .leftJoinAndSelect('exec.datasAdicionais', 'data')
             .innerJoin('exec.itemObra', 'item')
             .innerJoin('item.obra', 'obra')
-            .where('exec.item_obra_id = :itemObraId', { itemObraId })
-            .andWhere('obra.usuario_id = :usuarioId', { usuarioId })
+            .where('exec.itemObraId = :itemObraId', { itemObraId })
+            .andWhere('obra.usuarioId = :usuarioId', { usuarioId })
             .getOne();
 
         if (!execucao) {
@@ -84,7 +84,7 @@ export class ExecucaoService {
             .innerJoin('exec.itemObra', 'item')
             .innerJoin('item.obra', 'obra')
             .where('data.id = :id', { id })
-            .andWhere('obra.usuario_id = :usuarioId', { usuarioId })
+            .andWhere('obra.usuarioId = :usuarioId', { usuarioId })
             .getOne();
 
         if (!dataExistente) {

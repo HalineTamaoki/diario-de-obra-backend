@@ -1,7 +1,7 @@
 import { IsBoolean, IsNotEmpty } from "class-validator";
 
 export class Selecionar {
-    @IsBoolean({ always: true })
-    @IsNotEmpty({ message: 'O campo selecionado não pode ser vazio', always: true })
+    @IsBoolean( { message: 'O campo selecionado deve ser um valor booleano' })
+    @IsNotEmpty({ message: 'O campo selecionado não pode ser vazio' })
     selecionado:boolean;
 }

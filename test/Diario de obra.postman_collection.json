@@ -1,0 +1,3195 @@
+{
+  "info": {
+    "_postman_id": "033e9773-50cd-4d76-9af9-67a595a95c54",
+    "name": "Diario de obra",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "21978299"
+  },
+  "item": [
+    {
+      "name": "Login",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.access_token).not.to.be.null;\r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set('access_token', jsonData.access_token)\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"senha\": \"{{senhaUsuario}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/auth/login",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Usuario",
+      "item": [
+        {
+          "name": "Insuccesso - atributos obrigatórios faltando",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"O email não pode ser vazio\");\r",
+                  "    pm.expect(jsonData.message).to.contains(\"A senha não pode ser vazia\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/usuario",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "usuario"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - email duplicado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Usuário com este email já existe.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"senha\": \"abcdef\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/usuario",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "usuario"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Obra",
+      "item": [
+        {
+          "name": "Successo - Cadastro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set('idObra', jsonData.id)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Obra teste\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/obra",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "obra"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Editar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": {{idObra}},\r\n    \"nome\": \"Obra teste 2\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/obra",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "obra"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/obra",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "obra"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - atributos obrigatórios faltando Copy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"O nome não pode ser vazio\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/obra",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "obra"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - atributos obrigatórios faltando",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"O id deve ser um número\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/obra",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "obra"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - objeto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Obra não encontrada\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": -1,\r\n    \"nome\": \"test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/obra",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "obra"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - objeto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Obra com ID -1 não encontrada ou você não tem permissão.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/obra/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "obra",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Item Obra",
+      "item": [
+        {
+          "name": "Successo - Cadastro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set('idItem', jsonData.id)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Item Obra\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/item/{{idObra}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "item",
+                "{{idObra}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Editar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": {{idItem}},\r\n    \"nome\": \"Item Obra teste 2\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/item",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "item"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/item/{{idObra}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "item",
+                "{{idObra}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - atributos obrigatórios faltando",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"O nome não pode ser vazio\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/item/{{idObra}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "item",
+                "{{idObra}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - Obra não existente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Obra não encontrada ou você não tem permissão.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Item obra\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/item/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "item",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - atributos obrigatórios faltando",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"O id deve ser um número\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/item",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "item"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - objeto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Este item não pertence a você ou não existe.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": -1,\r\n    \"nome\": \"test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/item",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "item"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - objeto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Este item não pertence a você ou não existe.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/item/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "item",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ideia",
+      "item": [
+        {
+          "name": "Successo - Cadastro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set('idIdeia', jsonData.id)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"link\": \"https://br.pinterest.com/\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/ideacao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "ideacao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/ideacao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "ideacao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - atributos obrigatórios faltando",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"O link não pode ser vazio\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/ideacao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "ideacao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - Item não existente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Este item não pertence a você ou não existe.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"link\": \"https://br.pinterest.com/\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/ideacao/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "ideacao",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - objeto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Ideia não encontrada.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/ideacao/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "ideacao",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Orçamento",
+      "item": [
+        {
+          "name": "Successo - Cadastro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set('idOrcamento', jsonData.id)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"empresa\": \"Fornecedor XPTO Ltda\",\r\n    \"valor\": 1234.56,\r\n    \"data\": \"2026-02-03T00:00:00.000Z\",\r\n    \"comentarios\": \"Algum comentario\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/orcamento/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Editar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": {{idOrcamento}},\r\n    \"empresa\": \"Fornecedor 2\",\r\n    \"valor\": null,\r\n    \"data\": \"2026-02-03T00:00:00.000Z\",\r\n    \"comentarios\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/orcamento",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/orcamento/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Selecionar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"selecionado\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/orcamento/{{idOrcamento}}/selecionar",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento",
+                "{{idOrcamento}}",
+                "selecionar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Get Detalhes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/orcamento/detalhes/{{idOrcamento}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento",
+                "detalhes",
+                "{{idOrcamento}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - atributos obrigatórios faltando",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"O nome do fornecedor não pode ser vazio\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/orcamento/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - atributos obrigatórios faltando - selecionar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"O campo selecionado não pode ser vazio\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/orcamento/{{idOrcamento}}/selecionar",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento",
+                "{{idOrcamento}}",
+                "selecionar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - Item não existente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Este item não pertence a você ou não existe.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"empresa\": \"Fornecedor XPTO Ltda\",\r\n    \"valor\": 1234.56,\r\n    \"data\": \"2026-02-03T00:00:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/orcamento/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - atributos obrigatórios faltando",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"O id não pode ser vazio\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/orcamento",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - objeto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Este orçamento não pertence às suas obras ou não existe.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": -1,\r\n    \"empresa\": \"Fornecedor 2\",\r\n    \"valor\": null,\r\n    \"data\": \"2026-02-03T00:00:00.000Z\",\r\n    \"comentarios\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/orcamento",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insucesso - objeto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/orcamento/detalhes/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento",
+                "detalhes",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - objeto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Este orçamento não pertence às suas obras ou não existe.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/orcamento/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Execucao",
+      "item": [
+        {
+          "name": "Successo - Cadastrar data adicional",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set('idDataAdicional', jsonData.id)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Data Adicional\",\r\n    \"data\": \"2026-02-03T00:00:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/execucao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "execucao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Editar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"inicio\": \"2026-02-03T00:00:00.000Z\",\r\n    \"termino\": \"2026-02-04T00:00:00.000Z\",\r\n    \"comentarios\": \"teste\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/execucao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "execucao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Cadastrar data adicional a execucao existente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Data Adicional 2\",\r\n    \"data\": \"2026-02-03T00:00:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/execucao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "execucao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/execucao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "execucao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - atributos obrigatórios faltando",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"O nome não pode ser vazio\");\r",
+                  "    pm.expect(jsonData.message).to.contains(\"A data não pode ser vazia\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/execucao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "execucao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - Item não existente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Este item não pertence a você ou não existe.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Data Adicional\",\r\n    \"data\": \"2026-02-03T00:00:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/execucao/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "execucao",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - objeto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Este item não pertence a você ou não existe.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": -1,\r\n    \"empresa\": \"Fornecedor 2\",\r\n    \"valor\": null,\r\n    \"data\": \"2026-02-03T00:00:00.000Z\",\r\n    \"comentarios\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/execucao/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "execucao",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - objeto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Data adicional não encontrada ou você não tem permissão para excluí-la.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/execucao/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "execucao",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Finalizacao",
+      "item": [
+        {
+          "name": "Successo - Editar Comentario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.comentarios).not.to.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"comentarios\": \"teste\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/finalizacao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "finalizacao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Marcar finalizado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.data).not.to.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"selecionado\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/finalizacao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "finalizacao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.data).not.to.be.null;\r",
+                  "    pm.expect(jsonData.comentarios).not.to.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/finalizacao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "finalizacao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - desmarcar finalizado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.data).to.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"selecionado\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/finalizacao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "finalizacao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Get não finalizado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.data).to.be.null;\r",
+                  "    pm.expect(jsonData.comentarios).not.to.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/finalizacao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "finalizacao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - atributos obrigatórios faltando",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"O campo selecionado não pode ser vazio\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/finalizacao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "finalizacao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - Item não existente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Este item não pertence a você ou não existe.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"selecionado\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/finalizacao/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "finalizacao",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - atributos obrigatórios faltando",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"O comentário não pode ser vazio\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/finalizacao/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "finalizacao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - objeto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Este item não pertence a você ou não existe.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"comentarios\": \"teste\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/finalizacao/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "finalizacao",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Deletes",
+      "item": [
+        {
+          "name": "Successo - Delete - Ideia",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"idIdeia\", null)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/ideacao/{{idIdeia}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "ideacao",
+                "{{idIdeia}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Delete - Orçamento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"idOrcamento\", null)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/orcamento/{{idOrcamento}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "orcamento",
+                "{{idOrcamento}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Delete - Data adicional",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"idDataAdicional\", null)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/execucao/{{idDataAdicional}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "execucao",
+                "{{idDataAdicional}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Delete - Item Obra",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"idItem\", null)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/item/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "item",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Delete - Obra",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"idObra\", null)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{apiRef}}/obra/{{idObra}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "obra",
+                "{{idObra}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "apiRef",
+      "value": ""
+    },
+    {
+      "key": "access_token",
+      "value": ""
+    },
+    {
+      "key": "email",
+      "value": ""
+    },
+    {
+      "key": "idObra",
+      "value": ""
+    },
+    {
+      "key": "idItem",
+      "value": ""
+    },
+    {
+      "key": "idIdeia",
+      "value": ""
+    },
+    {
+      "key": "idOrcamento",
+      "value": ""
+    },
+    {
+      "key": "idDataAdicional",
+      "value": ""
+    }
+  ]
+}
