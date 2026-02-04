@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Request, UseGuards } from "@nestjs/common";
 import { Request as RequestType } from "express";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { DataAdicionalDto } from "./dto/dataAdicional";
@@ -16,28 +16,28 @@ export class ExecucaoController {
 
     @HttpCode(HttpStatus.OK)
     @Get(':idItem')
-    async get(@Param('idItem') idItem: number, @Request() req: AuthRequest) {
+    async get(@Param('idItem', ParseIntPipe) idItem: number, @Request() req: AuthRequest) {
       return this.execucaoService.get(idItem, req.user.id);
     }
 
     @HttpCode(HttpStatus.OK)
     @UseGuards(JwtAuthGuard)
     @Post(':idItem')
-    async cadastrarDataAdicional(@Param('idItem') idItem: number, @Body() data: DataAdicionalDto, @Request() req: AuthRequest) {
+    async cadastrarDataAdicional(@Param('idItem', ParseIntPipe) idItem: number, @Body() data: DataAdicionalDto, @Request() req: AuthRequest) {
       return this.execucaoService.cadastrarDataAdicional(idItem, data, req.user.id);
     }
     
     @HttpCode(HttpStatus.OK)
     @UseGuards(JwtAuthGuard)
     @Put(':idItem')
-    async editar(@Param('idItem') idItem: number, @Body() execucao: ExecucaoDto, @Request() req: AuthRequest) {
+    async editar(@Param('idItem', ParseIntPipe) idItem: number, @Body() execucao: ExecucaoDto, @Request() req: AuthRequest) {
       return this.execucaoService.editar(idItem, execucao, req.user.id);
     }
 
     @HttpCode(HttpStatus.OK)  
     @UseGuards(JwtAuthGuard)
     @Delete(':id')
-    async deletarDataAdicional(@Param('id') id: number, @Request() req: AuthRequest) {
+    async deletarDataAdicional(@Param('id', ParseIntPipe) id: number, @Request() req: AuthRequest) {
       return this.execucaoService.deletarDataAdicional(id, req.user.id);
     }
 }

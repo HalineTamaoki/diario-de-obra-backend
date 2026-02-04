@@ -1,70 +1,73 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Selecionar } from 'src/dto/selecionar';
+import { Repository } from 'typeorm';
 import { ItemObraService } from '../itemObra/itemObra.service';
-import { OrcamentoDetalhes, OrcamentoResumo } from './dto/orcamento';
+import { OrcamentoDetalhes, OrcamentoDetalhesId, OrcamentoResumo } from './dto/orcamento';
+import { Orcamento } from './entity/orcamento.entity';
 
 @Injectable()
 export class OrcamentoService {
-    constructor(private readonly itemObraService: ItemObraService) {} 
+    constructor(
+        private readonly itemObraService: ItemObraService,
+        @InjectRepository(Orcamento) private orcamentoRepository: Repository<Orcamento>,
+    ) {} 
 
-    async validarOrcamento(idOrcamento: number, userId: number): Promise<boolean> {
-        // TODO: obter idObra a partir do idOrcamento
-        const idObra = 123; 
-        const isValid = await this.itemObraService.validarItemObra(userId, idObra);
-        return isValid;
+    async validarOrcamento(orcamentoId: number, usuarioId: number): Promise<Orcamento> {
+        const orcamento = await this.orcamentoRepository.createQueryBuilder('orcamento')
+            .innerJoin('orcamento.itemObra', 'item') 
+            .innerJoin('item.obra', 'obra')         
+            .where('orcamento.id = :orcamentoId', { orcamentoId })
+            .andWhere('obra.usuario_id = :usuarioId', { usuarioId })
+            .getOne();
+
+        if (!orcamento) {
+            throw new NotFoundException('Este orçamento não pertence às suas obras ou não existe.');
+        }
+
+        return orcamento;
     }
 
-    async get(idItem: number, userId: number): Promise<OrcamentoResumo[]> {
-        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
-        }
-        // TODO: add no banco de dados
-        return [];
+    async get(itemId: number, usuarioId: number): Promise<OrcamentoResumo[]> {
+        return await this.orcamentoRepository.createQueryBuilder('orcamento')
+            .innerJoin('orcamento.itemObra', 'item')
+            .innerJoin('item.obra', 'obra')         
+            .select([
+                'orcamento.id',
+                'orcamento.selecionado',
+                'orcamento.empresa',
+                'orcamento.valor'
+            ])
+            .where('orcamento.item_obra_id = :itemId', { itemId })
+            .andWhere('obra.usuario_id = :usuarioId', { usuarioId })
+            .getMany();
     }
 
-    async getDetalhes(idOrcamento: number, userId: number): Promise<OrcamentoDetalhes> {
-        const isValid = await this.validarOrcamento(idOrcamento, userId);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
-        }
-        // TODO: add no banco de dados
-        return {} as OrcamentoDetalhes;
+    async getDetalhes(idOrcamento: number, userId: number): Promise<OrcamentoDetalhesId> {
+        return await this.validarOrcamento(idOrcamento, userId);
     }
 
     async cadastrar(idItem: number, orcamento: OrcamentoDetalhes, userId: number) {
-        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
-        }
-        // TODO: add no banco de dados
-        return;
+        await this.itemObraService.validarItemObra(userId, idItem);
+        const orcamentoEntity = this.orcamentoRepository.create({ ...orcamento, itemObraId: idItem });
+        await this.orcamentoRepository.save(orcamentoEntity);
+        return orcamentoEntity;
     }
 
-    async editar(idItem: number, orcamento: OrcamentoDetalhes, userId: number) {
-        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
-        }
-        // TODO: add no banco de dados
-        return;
+    async editar(orcamento: OrcamentoDetalhesId, userId: number) {
+        const orcamentoDb = await this.validarOrcamento(orcamento.id, userId);
+        this.orcamentoRepository.merge(orcamentoDb, orcamento);
+        return await this.orcamentoRepository.save(orcamentoDb);        
     }
 
     async selecionar(idOrcamento: number, selecionado: Selecionar, userId: number) {
-        const isValid = await this.validarOrcamento(idOrcamento, userId);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
-        }
-        // TODO: add no banco de dados
-        return;
+        const orcamento = await this.validarOrcamento(idOrcamento, userId);
+        this.orcamentoRepository.merge(orcamento, selecionado);
+        await this.orcamentoRepository.save(orcamento);
     }
 
     async deletar(idOrcamento: number, userId: number) {
-        const isValid = await this.validarOrcamento(idOrcamento, userId);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
-        }
-        // TODO: add no banco de dados
-        return;
+        await this.validarOrcamento(idOrcamento, userId);
+        await this.orcamentoRepository.delete({ id: idOrcamento });
     }
 }

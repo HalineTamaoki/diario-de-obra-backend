@@ -1,48 +1,96 @@
-import { Injectable } from '@nestjs/common';
-import { UserService } from '../usuario/user.service'; // Importe o UserService
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ItemObraService } from '../itemObra/itemObra.service';
 import { DataAdicionalDto } from './dto/dataAdicional';
 import { ExecucaoDto, ExecucaoDtoDetalhes } from './dto/execucao';
-import { ItemObraService } from '../itemObra/itemObra.service';
+import { DataAdicional } from './entity/data-adicional.entity';
+import { Execucao } from './entity/execucao.entity';
 
 @Injectable()
 export class ExecucaoService {
-    constructor(private readonly itemObraService: ItemObraService) {} 
+    constructor(
+        private readonly itemObraService: ItemObraService,
+        @InjectRepository(Execucao) private execucaoRepository: Repository<Execucao>,
+        @InjectRepository(DataAdicional) private dataAdicionalRepository: Repository<DataAdicional>,
+    ) {} 
 
-    async get(idItem: number, userId: number): Promise<ExecucaoDtoDetalhes> {
-        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
+    async get(itemObraId: number, usuarioId: number): Promise<ExecucaoDtoDetalhes> {
+        const execucao = await this.execucaoRepository.createQueryBuilder('exec')
+            .leftJoinAndSelect('exec.datasAdicionais', 'data')
+            .innerJoin('exec.itemObra', 'item')
+            .innerJoin('item.obra', 'obra')
+            .where('exec.item_obra_id = :itemObraId', { itemObraId })
+            .andWhere('obra.usuario_id = :usuarioId', { usuarioId })
+            .getOne();
+
+        if (!execucao) {
+            return {};
         }
-        // TODO: add no banco de dados
-        return {} as ExecucaoDtoDetalhes;
+
+        return {
+            ...execucao,
+            datasAdicionais: execucao.datasAdicionais.map(d => ({
+                id: d.id,
+                nome: d.nome,
+                data: d.data
+            }))
+        };
     }
 
-    async editar(idItem: number, execucao: ExecucaoDto, userId: number) {
-        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
+    async editar(itemObraId: number, execucao: ExecucaoDto, userId: number) {
+        await this.itemObraService.validarItemObra(userId, itemObraId);
+
+        const existente = await this.execucaoRepository.findOne({ where: { itemObraId } });
+
+        let novaExecucao: Execucao;
+        if (!existente) {
+            novaExecucao = this.execucaoRepository.create({...execucao, itemObraId});
+        } else {
+            novaExecucao = existente;
+            novaExecucao = this.execucaoRepository.merge(novaExecucao, execucao);
         }
-        // TODO: add no banco de dados
-        return;
+
+        return await this.execucaoRepository.save(novaExecucao);
     }
 
-    async cadastrarDataAdicional(idItem: number, data: DataAdicionalDto, userId: number) {
-        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
+    async cadastrarDataAdicional(
+        idItem: number,
+        data: DataAdicionalDto,
+        userId: number,
+    ): Promise<DataAdicionalDto> {
+        await this.itemObraService.validarItemObra(userId, idItem);
+
+        let execucao = await this.execucaoRepository.findOne({ where: { itemObraId: idItem } });
+        if (!execucao) {
+            execucao = await this.execucaoRepository.save({ itemObraId: idItem });
         }
-        // TODO: add no banco de dados
-        return;
+
+        const novaDataAdicional = await this.dataAdicionalRepository.save({
+            ...data,
+            execucao,
+        });
+
+        return {
+            id: novaDataAdicional.id,
+            data: novaDataAdicional.data,
+            nome: novaDataAdicional.nome,
+        } as DataAdicionalDto;
     }
 
-    async deletarDataAdicional(id: number, userId: number) {
-        //TODO: obter idObra a partir do idData
-        const idObra = 123;
-        const isValid = await this.itemObraService.validarItemObra(userId, idObra);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
+    async deletarDataAdicional(id: number, usuarioId: number) {
+        const dataExistente = await this.dataAdicionalRepository.createQueryBuilder('data')
+            .innerJoin('data.execucao', 'exec')
+            .innerJoin('exec.itemObra', 'item')
+            .innerJoin('item.obra', 'obra')
+            .where('data.id = :id', { id })
+            .andWhere('obra.usuario_id = :usuarioId', { usuarioId })
+            .getOne();
+
+        if (!dataExistente) {
+        throw new NotFoundException('Data adicional não encontrada ou você não tem permissão para excluí-la.');
         }
-        // TODO: add no banco de dados
-        return;
+
+        await this.dataAdicionalRepository.delete(id);
     }
 }

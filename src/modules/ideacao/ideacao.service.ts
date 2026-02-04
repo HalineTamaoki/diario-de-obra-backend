@@ -1,46 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { ItemObraService } from '../itemObra/itemObra.service';
-import { IdeiaDto } from './dto/ideacao';
+import { IdeiaDto, NovaIdeiaDto } from './dto/ideacao';
+import { Ideia } from './entity/ideia.entity';
 
 @Injectable()
 export class IdeacaoService {
-    constructor(private readonly itemObraService: ItemObraService) {} 
+    constructor(
+        private readonly itemObraService: ItemObraService,
+        @InjectRepository(Ideia) private ideacaoRepository: Repository<Ideia>,
+    ) {} 
 
-    async get(idItem: number, userId: number): Promise<IdeiaDto[]> {
-        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
-        }
-        // TODO: add no banco de dados
-        return [];
+    async get(itemId: number, usuarioId: number): Promise<IdeiaDto[]> {
+        return this.ideacaoRepository.createQueryBuilder('ideia')
+            .innerJoin('ideia.itemObra', 'item')
+            .innerJoin('item.obra', 'obra')
+            .select([
+                'ideia.id',
+                'ideia.link'
+            ])
+            .where('ideia.item_obra_id = :itemId', { itemId })
+            .andWhere('obra.usuario_id = :usuarioId', { usuarioId })
+            .getMany();
     }
 
-    async cadastrar(idItem: number, ideia: IdeiaDto, userId: number) {
-        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
-        }
-        // TODO: add no banco de dados
-        return;
-    }
-
-    async editar(idItem: number, ideia: IdeiaDto, userId: number) {
-        const isValid = await this.itemObraService.validarItemObra(userId, idItem);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
-        }
-        // TODO: add no banco de dados
-        return;
+    async cadastrar(idItem: number, ideia: NovaIdeiaDto, userId: number) {
+        await this.itemObraService.validarItemObra(userId, idItem);
+        const ideiaEntity = this.ideacaoRepository.create({ ...ideia, itemObraId: idItem });
+        await this.ideacaoRepository.save(ideiaEntity);
+        return ideiaEntity;
     }
 
     async deletar(id: number, userId: number) {
-        //TODO: obter idObra a partir do idIdeia
-        const idObra = 123;
-        const isValid = await this.itemObraService.validarItemObra(userId, idObra);
-        if (!isValid) {
-            throw new Error('Usuário não tem acesso a este item.');
+        const ideia = await this.ideacaoRepository.findOne({ where: { id } });
+        if(!ideia) {
+            throw new NotFoundException('Ideia não encontrada.');
         }
-        // TODO: add no banco de dados
-        return;
-    }
+        await this.itemObraService.validarItemObra(userId, ideia.itemObraId);
+        await this.ideacaoRepository.delete({ id })
+    };
 }

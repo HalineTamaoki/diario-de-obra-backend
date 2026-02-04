@@ -1,20 +1,24 @@
-import { IsDate, IsNumber } from "class-validator";
+import { Type } from "class-transformer";
+import { IsDate, IsOptional, MaxLength } from "class-validator";
 import { DataAdicionalDto } from "./dataAdicional";
 
 export class ExecucaoDto {
-    @IsNumber()
-    id: number;
-
+    @IsOptional()
+    @MaxLength(255, {message: 'Os comentários não podem ultrapassar 255 caracteres'})
     comentarios: string;
 
-    @IsDate()
+    @IsOptional()
+    @Type(() => Date)
+    @IsDate({ message: 'A data deve ser válida' })
     inicio: Date;
 
-    @IsDate()
+    @IsOptional()
+    @Type(() => Date)
+    @IsDate({ message: 'A data deve ser válida' })
     termino: Date;
 }
 
-export class ExecucaoDtoDetalhes extends ExecucaoDto {
-    itemObraId: number;
-    datasAdicionais: DataAdicionalDto[];
+export type ExecucaoDtoDetalhes = Partial<ExecucaoDto> & {
+    itemObraId?: number;
+    datasAdicionais?: DataAdicionalDto[];
 }

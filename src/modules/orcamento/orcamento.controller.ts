@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Request, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Request, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { Request as RequestType } from "express";
 import { Selecionar } from "src/dto/selecionar";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { OrcamentoDetalhes } from "./dto/orcamento";
+import { OrcamentoDetalhes, OrcamentoDetalhesId } from "./dto/orcamento";
 import { OrcamentoService } from "./orcamento.service";
 
 interface AuthRequest extends RequestType {
@@ -22,7 +22,7 @@ export class OrcamentoController {
 
     @HttpCode(HttpStatus.OK)
     @Get('/detalhes/:idOrcamento')
-    async getDetalhes(@Param('idOrcamento') idOrcamento: number, @Request() req: AuthRequest) {
+    async getDetalhes(@Param('idOrcamento', ParseIntPipe) idOrcamento: number, @Request() req: AuthRequest) {
       return this.orcamentoService.getDetalhes(idOrcamento, req.user.id);
     }
 
@@ -35,10 +35,9 @@ export class OrcamentoController {
     
     @HttpCode(HttpStatus.OK)
     @UseGuards(JwtAuthGuard)
-    @Put(':idItem')
-    @UsePipes(new ValidationPipe({ groups: ['edit'] }))
-    async editar(@Param('idItem') idItem: number, @Body() orcamento: OrcamentoDetalhes, @Request() req: AuthRequest) {
-      return this.orcamentoService.editar(idItem, orcamento, req.user.id);
+    @Put()
+    async editar(@Body() orcamento: OrcamentoDetalhesId, @Request() req: AuthRequest) {
+      return this.orcamentoService.editar(orcamento, req.user.id);
     }
 
     @HttpCode(HttpStatus.OK)

@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Request, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Request, UseGuards } from "@nestjs/common";
 import { Request as RequestType } from "express";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { IdeiaDto } from "./dto/ideacao";
+import { NovaIdeiaDto } from "./dto/ideacao";
 import { IdeacaoService } from "./ideacao.service";
 
 interface AuthRequest extends RequestType {
@@ -22,16 +22,8 @@ export class IdeacaoController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(JwtAuthGuard)
     @Post(':idItem')
-    async cadastrar(@Param('idItem') idItem: number, @Body() ideia: IdeiaDto, @Request() req: AuthRequest) {
+    async cadastrar(@Param('idItem', ParseIntPipe) idItem: number, @Body() ideia: NovaIdeiaDto, @Request() req: AuthRequest) {
       return this.ideacaoService.cadastrar(idItem, ideia, req.user.id);
-    }
-    
-    @HttpCode(HttpStatus.OK)
-    @UseGuards(JwtAuthGuard)
-    @Put(':idItem')
-    @UsePipes(new ValidationPipe({ groups: ['edit'] }))
-    async editar(@Param('idItem') idItem: number, @Body() ideia: IdeiaDto, @Request() req: AuthRequest) {
-      return this.ideacaoService.editar(idItem, ideia, req.user.id);
     }
 
     @HttpCode(HttpStatus.OK)  
