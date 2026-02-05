@@ -10,7 +10,7 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     @Post()
     @UsePipes(new ValidationPipe({ groups: ['create'], exceptionFactory: fieldExceptionFactory }))
-    async cadastrar(@Body() usuario: UsuarioDto) {
+    async cadastrar(@Body() usuario: UsuarioDto): Promise<{id: number, email: string}> {
       return this.userService.cadastrar(usuario);
     }
 }

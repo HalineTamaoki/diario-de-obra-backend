@@ -11,7 +11,7 @@ export class UserService {
     @InjectRepository(Usuario) private userRepository: Repository<Usuario>,
   ) {}
 
-  async cadastrar(user: UsuarioDto) {
+  async cadastrar(user: UsuarioDto): Promise<{id: number, email: string}> {
     const exists = await this.userRepository.exists({ where: { email: user.email } });
     if (exists) {
       throw new BadRequestException('Usuário com este email já existe.');
