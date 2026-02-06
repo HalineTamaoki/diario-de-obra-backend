@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Request, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { Body, Controller, Delete, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Request, UseGuards } from "@nestjs/common";
 import { Request as RequestType } from "express";
-import { ItemObraService } from "./itemObra.service";
 import { IdNome, Nome } from "src/dto/idNome";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { ItemObraService } from "./itemObra.service";
 
 interface AuthRequest extends RequestType {
   user: { id: number; [key: string]: any };
@@ -12,12 +12,6 @@ interface AuthRequest extends RequestType {
 @UseGuards(JwtAuthGuard)
 export class ItemObraController {
     constructor(private itemObraService: ItemObraService) {}
-
-    @HttpCode(HttpStatus.OK)
-    @Get(':idObra')
-    async get(@Param('idObra', ParseIntPipe) idObra: number, @Request() req: AuthRequest) {
-      return this.itemObraService.get(idObra, req.user.id);
-    }
 
     @HttpCode(HttpStatus.OK)
     @UseGuards(JwtAuthGuard)

@@ -3,6 +3,7 @@ import { IdNome, Nome } from "../../dto/idNome";
 import { ObraService } from "./obra.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { Request as RequestType } from "express";
+import { ObraDetalhada } from "./types/obra";
 
 interface AuthRequest extends RequestType {
   user: { id: number; [key: string]: any };
@@ -17,6 +18,12 @@ export class ObraController {
     @Get()
     async get(@Request() req: AuthRequest) {
       return this.obraService.get(req.user.id);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Get(':id')
+    async getById(@Param('id', ParseIntPipe) id: number, @Request() req: AuthRequest): Promise<ObraDetalhada> {
+      return this.obraService.getById(id, req.user.id);
     }
 
     @HttpCode(HttpStatus.OK)

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { IdNome, Nome } from '../../dto/idNome';
 import { ObraDto } from './dto/obra';
 import { Obra } from './entity/obra.entity';
+import { ObraDetalhada } from './types/obra';
 
 @Injectable()
 export class ObraService {
@@ -39,6 +40,35 @@ export class ObraService {
             }));
     }
 
+    async getById(obraId: number, usuarioId: number): Promise<ObraDetalhada> {
+        const obra = await this.obraRepository.createQueryBuilder('obra')
+            .leftJoinAndSelect('obra.itensObra', 'item')
+            .select([
+                'obra.id',
+                'obra.nome',
+                'item.id',
+                'item.nome',
+                'item.ultimaEtapa'
+            ])
+            .where('obra.id = :obraId', { obraId })
+            .andWhere('obra.usuarioId = :usuarioId', { usuarioId })
+            .getOne();
+
+        if (!obra) {
+            throw new NotFoundException('Obra não encontrada ou você não tem permissão para acessá-la.');
+        }
+
+        return {
+            idObra: obra.id,
+            nome: obra.nome,
+            items: obra.itensObra.map(item => ({
+                id: item.id,
+                nome: item.nome,
+                ultimaEtapa: item.ultimaEtapa,
+            })),
+        };
+    }
+    
     async cadastrar(nomeObra: Nome, userId: number) {
         const novaObra = this.obraRepository.create({ nome: nomeObra.nome, usuarioId: userId });
         return this.obraRepository.save(novaObra);

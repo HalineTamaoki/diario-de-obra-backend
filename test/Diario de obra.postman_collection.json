@@ -674,7 +674,7 @@
           "response": []
         },
         {
-          "name": "Successo - Get",
+          "name": "Successo - Get detalhes obra",
           "event": [
             {
               "listen": "test",
@@ -710,12 +710,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{apiRef}}/item/{{idObra}}",
+              "raw": "{{apiRef}}/obra/{{idObra}}",
               "host": [
                 "{{apiRef}}"
               ],
               "path": [
-                "item",
+                "obra",
                 "{{idObra}}"
               ]
             }

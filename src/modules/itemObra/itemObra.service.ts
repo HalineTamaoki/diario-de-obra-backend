@@ -27,14 +27,6 @@ export class ItemObraService {
         return true;
     }  
 
-    async get(obraId: number, userId: number): Promise<ItemObraDto[]> {
-        const obraValida = await this.obraService.validarObra(userId, obraId);
-        if (!obraValida) {
-            throw new NotFoundException('Obra não encontrada ou você não tem permissão.');
-        }
-        return this.itemObraRepository.find({ where: { obraId } });
-    }
-
     async cadastrar(idObra: number, itemObra: Nome, userId: number) {
         const obraValida = await this.obraService.validarObra(userId, idObra);
         if (!obraValida) {
