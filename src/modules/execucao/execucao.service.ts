@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ItemObraService } from '../itemObra/itemObra.service';
-import { DataAdicionalDto } from './dto/dataAdicional';
+import { DataAdicionalDto, NovaDataAdicional } from './dto/dataAdicional';
 import { ExecucaoDto, ExecucaoDtoDetalhes } from './dto/execucao';
 import { DataAdicional } from './entity/data-adicional.entity';
 import { Execucao } from './entity/execucao.entity';
@@ -56,7 +56,7 @@ export class ExecucaoService {
 
     async cadastrarDataAdicional(
         idItem: number,
-        data: DataAdicionalDto,
+        data: NovaDataAdicional,
         userId: number,
     ): Promise<DataAdicionalDto> {
         await this.itemObraService.validarItemObra(userId, idItem);
@@ -76,6 +76,33 @@ export class ExecucaoService {
             data: novaDataAdicional.data,
             nome: novaDataAdicional.nome,
         } as DataAdicionalDto;
+    }
+
+    async editarDataAdicional(
+        id: number,
+        data: NovaDataAdicional,
+        userId: number,
+    ): Promise<DataAdicionalDto> {
+        const dataExistente = await this.dataAdicionalRepository.createQueryBuilder('data')
+            .innerJoin('data.execucao', 'exec')
+            .innerJoin('exec.itemObra', 'item')
+            .innerJoin('item.obra', 'obra')
+            .where('data.id = :id', { id })
+            .andWhere('obra.usuarioId = :userId', { userId })
+            .getOne();
+
+        if (!dataExistente) {
+            throw new NotFoundException('Data adicional não encontrada ou você não tem permissão para editá-la.');
+        }
+
+        const dataAtualizada = this.dataAdicionalRepository.merge(dataExistente, data);
+
+        const salvo = await this.dataAdicionalRepository.save(dataAtualizada);
+        return {
+            id: salvo.id,
+            nome: salvo.nome,
+            data: salvo.data,
+        };
     }
 
     async deletarDataAdicional(id: number, usuarioId: number) {

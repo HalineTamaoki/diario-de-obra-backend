@@ -1,9 +1,7 @@
 import { Type } from "class-transformer";
 import { IsDate, IsNotEmpty } from "class-validator";
 
-export class DataAdicionalDto    {
-    id: number;
-    
+export class NovaDataAdicional {
     @IsNotEmpty({ message: 'O nome não pode ser vazio'})
     nome: string;
 
@@ -11,4 +9,8 @@ export class DataAdicionalDto    {
     @Type(() => Date)
     @IsDate({ message: 'A data deve ser válida' })
     data: Date;
+}
+
+export class DataAdicionalDto extends NovaDataAdicional {
+    id: number;
 }

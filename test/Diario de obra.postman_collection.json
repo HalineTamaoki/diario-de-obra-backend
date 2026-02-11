@@ -2118,6 +2118,59 @@
           "response": []
         },
         {
+          "name": "Successo - Editar data adicional",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Data Adicional 2 - Editada\",\r\n    \"data\": \"2026-02-04T00:00:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/execucao/data-adicional/{{idDataAdicional}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "execucao",
+                "data-adicional",
+                "{{idDataAdicional}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Successo - Get",
           "event": [
             {
@@ -2335,6 +2388,65 @@
               ],
               "path": [
                 "execucao",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - objeto inexistente - data adicional",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Data adicional não encontrada ou você não tem permissão para editá-la.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Data Adicional \",\r\n    \"data\": \"2026-02-04T00:00:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/execucao/data-adicional/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "execucao",
+                "data-adicional",
                 "-1"
               ]
             }

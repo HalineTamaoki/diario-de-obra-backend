@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Request, UseGuards } from "@nestjs/common";
 import { Request as RequestType } from "express";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { DataAdicionalDto } from "./dto/dataAdicional";
+import { DataAdicionalDto, NovaDataAdicional } from "./dto/dataAdicional";
 import { ExecucaoDto } from "./dto/execucao";
 import { ExecucaoService } from "./execucao.service";
 
@@ -23,7 +23,7 @@ export class ExecucaoController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(JwtAuthGuard)
     @Post(':idItem')
-    async cadastrarDataAdicional(@Param('idItem', ParseIntPipe) idItem: number, @Body() data: DataAdicionalDto, @Request() req: AuthRequest) {
+    async cadastrarDataAdicional(@Param('idItem', ParseIntPipe) idItem: number, @Body() data: NovaDataAdicional, @Request() req: AuthRequest) {
       return this.execucaoService.cadastrarDataAdicional(idItem, data, req.user.id);
     }
     
@@ -32,6 +32,13 @@ export class ExecucaoController {
     @Put(':idItem')
     async editar(@Param('idItem', ParseIntPipe) idItem: number, @Body() execucao: ExecucaoDto, @Request() req: AuthRequest) {
       return this.execucaoService.editar(idItem, execucao, req.user.id);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(JwtAuthGuard)
+    @Put('data-adicional/:id')
+    async editarDataAdicional(@Param('id', ParseIntPipe) id: number, @Body() data: DataAdicionalDto, @Request() req: AuthRequest) {
+      return this.execucaoService.editarDataAdicional(id, data, req.user.id);
     }
 
     @HttpCode(HttpStatus.OK)  
