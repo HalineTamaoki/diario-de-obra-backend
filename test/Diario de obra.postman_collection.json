@@ -2541,7 +2541,7 @@
                 }
               ]
             },
-            "method": "PUT",
+            "method": "PATCH",
             "header": [],
             "body": {
               "mode": "raw",
@@ -2667,6 +2667,65 @@
               ],
               "path": [
                 "finalizacao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Successo - Editar Data de finalização",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () { \r",
+                  "    pm.response.to.have.status(200); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.data).not.to.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"data\": \"2026-02-04T00:00:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/finalizacao/data/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "finalizacao",
+                "data",
                 "{{idItem}}"
               ]
             }
@@ -2931,7 +2990,7 @@
                 }
               ]
             },
-            "method": "PUT",
+            "method": "PATCH",
             "header": [],
             "body": {
               "mode": "raw",
@@ -2949,6 +3008,65 @@
               ],
               "path": [
                 "finalizacao",
+                "{{idItem}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - data - atributos obrigatórios faltando",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () { \r",
+                  "    pm.response.to.have.status(400); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"A data não pode ser vazia\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/finalizacao/data/{{idItem}}",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "finalizacao",
+                "data",
                 "{{idItem}}"
               ]
             }
@@ -2989,7 +3107,7 @@
                 }
               ]
             },
-            "method": "PUT",
+            "method": "PATCH",
             "header": [],
             "body": {
               "mode": "raw",
@@ -3007,6 +3125,65 @@
               ],
               "path": [
                 "finalizacao",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Insuccesso - data - objeto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () { \r",
+                  "    pm.response.to.have.status(404); \r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response é o esperado\", function () { \r",
+                  "    pm.expect(jsonData.message).to.contains(\"Este item não pertence a você ou não existe.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"data\": \"2026-02-04T00:00:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiRef}}/finalizacao/data/-1",
+              "host": [
+                "{{apiRef}}"
+              ],
+              "path": [
+                "finalizacao",
+                "data",
                 "-1"
               ]
             }

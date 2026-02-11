@@ -1,8 +1,8 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Request, UseGuards } from "@nestjs/common";
 import { Request as RequestType } from "express";
 import { Selecionar } from "src/dto/selecionar";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { EditarComentario } from "./dto/finalizacao";
+import { EditarComentario, EditarData } from "./dto/finalizacao";
 import { FinalizacaoService } from "./finalizacao.service";
 
 interface AuthRequest extends RequestType {
@@ -29,8 +29,15 @@ export class FinalizacaoController {
     
     @HttpCode(HttpStatus.OK)
     @UseGuards(JwtAuthGuard)
-    @Put(':idItem')
+    @Patch(':idItem')
     async editarComentario(@Param('idItem') idItem: number, @Body() comentario: EditarComentario, @Request() req: AuthRequest) {
       return this.finalizacaoService.editarComentario(idItem, comentario, req.user.id);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(JwtAuthGuard)
+    @Patch('data/:idItem')
+    async editarData(@Param('idItem') idItem: number, @Body() data: EditarData, @Request() req: AuthRequest) {
+      return this.finalizacaoService.editarData(idItem, data, req.user.id);
     }
 }

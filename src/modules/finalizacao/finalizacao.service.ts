@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EtapasObra } from 'src/dto/EtapasObra';
 import { Selecionar } from 'src/dto/selecionar';
 import { Repository } from 'typeorm';
-import { EditarComentario, FinalizacaoType } from './dto/finalizacao';
-import { Finalizacao } from './entity/finalizacao.entity';
 import { ItemObraService } from '../itemObra/itemObra.service';
-import { EtapasObra } from 'src/dto/EtapasObra';
+import { EditarComentario, EditarData, FinalizacaoType } from './dto/finalizacao';
+import { Finalizacao } from './entity/finalizacao.entity';
 
 @Injectable()
 export class FinalizacaoService {
@@ -46,6 +46,12 @@ export class FinalizacaoService {
 
     async editarComentario(itemObraId: number, comentario: EditarComentario, usuarioId: number): Promise<FinalizacaoType> {
         return await this.editar(itemObraId, { comentarios: comentario.comentarios }, usuarioId);
+    }
+
+    async editarData(itemObraId: number, data: EditarData, usuarioId: number): Promise<FinalizacaoType> {
+        const finalizacao = await this.editar(itemObraId, { data: data.data }, usuarioId);
+        await this.itemObraService.atualizarEtapa(itemObraId, EtapasObra.FINALIZADO);
+        return finalizacao;
     }
 
     async selecionarFinalizado(itemObraId: number, selecionarFinalizado: Selecionar, userId: number) {
