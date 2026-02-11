@@ -57,7 +57,7 @@ export class FinalizacaoService {
     async selecionarFinalizado(itemObraId: number, selecionarFinalizado: Selecionar, userId: number) {
         const novaFinalizacao = { data: selecionarFinalizado.selecionado ? new Date() : null as any };
         const finalizacao = await this.editar(itemObraId, novaFinalizacao , userId);
-        await this.itemObraService.atualizarEtapa(itemObraId, EtapasObra.FINALIZADO, !selecionarFinalizado.selecionado);
+        await this.itemObraService.atualizarEtapa(itemObraId, selecionarFinalizado.selecionado ? EtapasObra.FINALIZADO : EtapasObra.EXECUCAO, !selecionarFinalizado.selecionado);
         return finalizacao;
     }
 }
