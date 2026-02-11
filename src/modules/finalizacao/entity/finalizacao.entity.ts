@@ -12,7 +12,7 @@ export class Finalizacao {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   data: Date;
 
   @Column({ type: 'varchar', length: 255, nullable: true })

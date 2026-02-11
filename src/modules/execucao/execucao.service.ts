@@ -120,7 +120,7 @@ export class ExecucaoService {
             .getOne();
 
         if (!dataExistente) {
-        throw new NotFoundException('Data adicional não encontrada ou você não tem permissão para excluí-la.');
+            throw new NotFoundException('Data adicional não encontrada ou você não tem permissão para excluí-la.');
         }
 
         await this.dataAdicionalRepository.delete(id);

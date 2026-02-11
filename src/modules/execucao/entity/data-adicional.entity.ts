@@ -15,7 +15,7 @@ export class DataAdicional {
   @Column({ type: 'varchar', length: 255, nullable: true })
   nome: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   data: Date;
 
   @Column({ name: 'execucao_id' })

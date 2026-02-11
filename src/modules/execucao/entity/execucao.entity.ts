@@ -17,10 +17,10 @@ export class Execucao {
   @Column({ type: 'varchar', length: 255, nullable: true })
   comentarios: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   inicio: Date;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   termino: Date;
 
   @Column({ name: 'item_obra_id', unique: true })

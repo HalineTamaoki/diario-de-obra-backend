@@ -61,7 +61,7 @@ export class ItemObraService {
 
         if(!item) return;
 
-        const canUpdate = reverter ? item.ultimaEtapa === novaEtapa + 1 : item.ultimaEtapa === novaEtapa - 1;
+        const canUpdate = reverter ? item.ultimaEtapa > novaEtapa : item.ultimaEtapa < novaEtapa;
         if (canUpdate) {
             await this.itemObraRepository.update(idItem, { ultimaEtapa: novaEtapa });
         }

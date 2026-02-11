@@ -52,6 +52,7 @@ export class ObraService {
             ])
             .where('obra.id = :obraId', { obraId })
             .andWhere('obra.usuarioId = :usuarioId', { usuarioId })
+            .orderBy('item.id', 'ASC')
             .getOne();
 
         if (!obra) {

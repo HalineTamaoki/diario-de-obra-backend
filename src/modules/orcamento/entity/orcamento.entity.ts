@@ -21,7 +21,7 @@ export class Orcamento {
   @Column({ type: 'decimal', precision: 12, scale: 2, nullable: true })
   valor: number;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   data: Date;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
