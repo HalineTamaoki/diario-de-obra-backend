@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { ItemObraService } from '../itemObra/itemObra.service';
 import { OrcamentoDetalhes, OrcamentoDetalhesId, OrcamentoResumo } from './dto/orcamento';
 import { Orcamento } from './entity/orcamento.entity';
+import { EtapasObra } from 'src/dto/EtapasObra';
 
 @Injectable()
 export class OrcamentoService {
@@ -51,6 +52,7 @@ export class OrcamentoService {
         await this.itemObraService.validarItemObra(userId, idItem);
         const orcamentoEntity = this.orcamentoRepository.create({ ...orcamento, itemObraId: idItem });
         await this.orcamentoRepository.save(orcamentoEntity);
+        await this.itemObraService.atualizarEtapa(idItem, EtapasObra.ORCAMENTO);
         return orcamentoEntity;
     }
 
@@ -67,7 +69,8 @@ export class OrcamentoService {
     }
 
     async deletar(idOrcamento: number, userId: number) {
-        await this.validarOrcamento(idOrcamento, userId);
+        const orcamento = await this.validarOrcamento(idOrcamento, userId);
         await this.orcamentoRepository.delete({ id: idOrcamento });
+        await this.itemObraService.reverterEtapaOrcamento(orcamento.itemObraId);
     }
 }

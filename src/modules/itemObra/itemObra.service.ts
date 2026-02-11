@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EtapasObra } from 'src/dto/EtapasObra';
 import { Repository } from 'typeorm';
 import { IdNome, Nome } from '../../dto/idNome';
 import { ObraService } from '../obra/obra.service';
-import { ItemObraDto } from './dto/itemObra';
 import { ItemObra } from './entity/itemObra.entity';
 
 @Injectable()
@@ -53,6 +53,28 @@ export class ItemObraService {
 
         if (result.affected === 0) {
             throw new NotFoundException(`Obra com ID ${idItem} não encontrado.`);
+        }
+    }
+
+    async atualizarEtapa(idItem: number, novaEtapa: EtapasObra, reverter?: boolean): Promise<void> {
+        const item = await this.itemObraRepository.findOne({ where: { id: idItem } });
+
+        if(!item) return;
+
+        const canUpdate = reverter ? item.ultimaEtapa === novaEtapa + 1 : item.ultimaEtapa === novaEtapa - 1;
+        if (canUpdate) {
+            await this.itemObraRepository.update(idItem, { ultimaEtapa: novaEtapa });
+        }
+    }
+
+    async reverterEtapaOrcamento(idItem: number): Promise<void> {
+        const item = await this.itemObraRepository.findOne({ 
+            where: { id: idItem },
+            relations: ['orcamentos'] 
+        });
+
+        if (item && item.ultimaEtapa === EtapasObra.ORCAMENTO && (!item.orcamentos || item.orcamentos.length === 0)) {
+            await this.itemObraRepository.update(idItem, { ultimaEtapa: 0 });
         }
     }
 }

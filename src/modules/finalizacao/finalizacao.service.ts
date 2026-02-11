@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { EditarComentario, FinalizacaoType } from './dto/finalizacao';
 import { Finalizacao } from './entity/finalizacao.entity';
 import { ItemObraService } from '../itemObra/itemObra.service';
+import { EtapasObra } from 'src/dto/EtapasObra';
 
 @Injectable()
 export class FinalizacaoService {
@@ -49,6 +50,8 @@ export class FinalizacaoService {
 
     async selecionarFinalizado(itemObraId: number, selecionarFinalizado: Selecionar, userId: number) {
         const novaFinalizacao = { data: selecionarFinalizado.selecionado ? new Date() : null as any };
-        return await this.editar(itemObraId, novaFinalizacao , userId);
+        const finalizacao = await this.editar(itemObraId, novaFinalizacao , userId);
+        await this.itemObraService.atualizarEtapa(itemObraId, EtapasObra.FINALIZADO, !selecionarFinalizado.selecionado);
+        return finalizacao;
     }
 }

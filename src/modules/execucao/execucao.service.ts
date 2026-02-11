@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EtapasObra } from 'src/dto/EtapasObra';
 import { Repository } from 'typeorm';
 import { ItemObraService } from '../itemObra/itemObra.service';
 import { DataAdicionalDto, NovaDataAdicional } from './dto/dataAdicional';
@@ -51,6 +52,9 @@ export class ExecucaoService {
             novaExecucao = this.execucaoRepository.merge(novaExecucao, execucao);
         }
 
+        if(execucao.inicio || execucao.termino){
+            await this.itemObraService.atualizarEtapa(itemObraId, EtapasObra.EXECUCAO);
+        }
         return await this.execucaoRepository.save(novaExecucao);
     }
 
@@ -70,6 +74,7 @@ export class ExecucaoService {
             ...data,
             execucao,
         });
+        await this.itemObraService.atualizarEtapa(idItem, EtapasObra.EXECUCAO);
 
         return {
             id: novaDataAdicional.id,
