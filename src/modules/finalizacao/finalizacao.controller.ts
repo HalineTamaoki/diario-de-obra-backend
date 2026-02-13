@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Request, UseGuards } from "@nestjs/common";
 import { Request as RequestType } from "express";
-import { Selecionar } from "src/dto/selecionar";
+import { Selecionar } from "../../dto/selecionar";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { EditarComentario, EditarData } from "./dto/finalizacao";
 import { FinalizacaoService } from "./finalizacao.service";

@@ -1,4 +1,4 @@
-import { IdNome } from "src/dto/idNome";
+import { IdNome } from "../../../dto/idNome";
 
 enum UltimaEtapa {
     IDEACAO = 1,

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EtapasObra } from 'src/dto/EtapasObra';
-import { Selecionar } from 'src/dto/selecionar';
+import { EtapasObra } from '../../dto/EtapasObra';
+import { Selecionar } from '../../dto/selecionar';
 import { Repository } from 'typeorm';
 import { ItemObraService } from '../itemObra/itemObra.service';
 import { EditarComentario, EditarData, FinalizacaoType } from './dto/finalizacao';

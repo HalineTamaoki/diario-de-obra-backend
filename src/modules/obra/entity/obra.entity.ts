@@ -1,5 +1,5 @@
-import { ItemObra } from 'src/modules/itemObra/entity/itemObra.entity';
-import { Usuario } from 'src/modules/usuario/entity/user.entity';
+import { ItemObra } from '../../itemObra/entity/itemObra.entity';
+import { Usuario } from '../../usuario/entity/user.entity';
 import {
   Column,
   Entity,

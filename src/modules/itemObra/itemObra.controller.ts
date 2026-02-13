@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Request, UseGuards } from "@nestjs/common";
 import { Request as RequestType } from "express";
-import { IdNome, Nome } from "src/dto/idNome";
+import { IdNome, Nome } from "../../dto/idNome";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { ItemObraService } from "./itemObra.service";
 

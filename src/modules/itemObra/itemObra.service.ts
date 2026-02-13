@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EtapasObra } from 'src/dto/EtapasObra';
+import { EtapasObra } from '../../dto/EtapasObra';
 import { Repository } from 'typeorm';
 import { IdNome, Nome } from '../../dto/idNome';
 import { ObraService } from '../obra/obra.service';

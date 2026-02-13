@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { DataAdicional } from './data-adicional.entity';
-import { ItemObra } from 'src/modules/itemObra/entity/itemObra.entity';
+import { ItemObra } from '../../itemObra/entity/itemObra.entity';
 
 @Entity('execucao')
 export class Execucao {

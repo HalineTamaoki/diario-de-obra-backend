@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EtapasObra } from 'src/dto/EtapasObra';
+import { EtapasObra } from '../../dto/EtapasObra';
 import { Repository } from 'typeorm';
 import { ItemObraService } from '../itemObra/itemObra.service';
 import { DataAdicionalDto, NovaDataAdicional } from './dto/dataAdicional';

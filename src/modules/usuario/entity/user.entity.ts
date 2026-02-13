@@ -1,4 +1,4 @@
-import { Obra } from 'src/modules/obra/entity/obra.entity';
+import { Obra } from '../../obra/entity/obra.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

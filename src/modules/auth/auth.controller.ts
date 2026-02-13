@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, ValidationPipe } from '@nestjs/common';
 import { UsuarioDto } from '../../dto/usuario';
 import { AuthService } from './auth.service';
-import { fieldExceptionFactory } from 'src/utils/utils';
+import { fieldExceptionFactory } from '../../utils/utils';
 
 @Controller('auth')
 export class AuthController {

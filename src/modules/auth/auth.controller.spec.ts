@@ -1,38 +1,44 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { UsuarioDto } from '../../dto/usuario';
 
 describe('AuthController', () => {
-  let authController: AuthController;
+  let controller: AuthController;
   let authService: AuthService;
 
+  const mockLoginResponse = {
+    access_token: 'valid_token',
+    validTo: '2026-02-12T00:00:00.000Z',
+  };
+
+  const mockUserDto: UsuarioDto = { email: 'test@test.com', senha: '123' } as any;
+
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
         {
           provide: AuthService,
           useValue: {
-            login: jest.fn(),
+            login: jest.fn().mockResolvedValue(mockLoginResponse),
           },
         },
       ],
     }).compile();
 
-    authController = app.get<AuthController>(AuthController);
-    authService = app.get<AuthService>(AuthService);
+    controller = module.get<AuthController>(AuthController);
+    authService = module.get<AuthService>(AuthService);
   });
 
-  describe('login', () => {
-    it('should call authService.login with the provided usuario and return the result', async () => {
-      const usuario = { username: 'testuser', password: 'testpass' };
-      const loginResult = { access_token: 'jwt-token' };
-      (authService.login as jest.Mock).mockResolvedValue(loginResult);
+  it('deve estar definido', () => {
+    expect(controller).toBeDefined();
+  });
 
-      const result = await authController.login(usuario as any);
+  it('deve chamar o authService.login e retornar os dados do token', async () => {
+    const result = await controller.login(mockUserDto);
 
-      expect(authService.login).toHaveBeenCalledWith(usuario);
-      expect(result).toEqual(loginResult);
-    });
+    expect(authService.login).toHaveBeenCalledWith(mockUserDto);
+    expect(result).toEqual(mockLoginResponse);
   });
 });

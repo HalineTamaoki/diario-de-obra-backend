@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Request, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { Request as RequestType } from "express";
-import { Selecionar } from "src/dto/selecionar";
+import { Selecionar } from "../../dto/selecionar";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { OrcamentoDetalhes, OrcamentoDetalhesId } from "./dto/orcamento";
 import { OrcamentoService } from "./orcamento.service";

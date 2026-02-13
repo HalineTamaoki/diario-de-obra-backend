@@ -1,4 +1,4 @@
-import { ItemObra } from 'src/modules/itemObra/entity/itemObra.entity';
+import { ItemObra } from '../../itemObra/entity/itemObra.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

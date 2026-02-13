@@ -1,4 +1,4 @@
-import { ItemObraDto } from "src/modules/itemObra/dto/itemObra";
+import { ItemObraDto } from "../../itemObra/dto/itemObra";
 
 export type ObraDetalhada = {
     idObra: number;

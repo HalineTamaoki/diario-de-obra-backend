@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Selecionar } from 'src/dto/selecionar';
+import { Selecionar } from '../../dto/selecionar';
 import { Repository } from 'typeorm';
 import { ItemObraService } from '../itemObra/itemObra.service';
 import { OrcamentoDetalhes, OrcamentoDetalhesId, OrcamentoResumo } from './dto/orcamento';
 import { Orcamento } from './entity/orcamento.entity';
-import { EtapasObra } from 'src/dto/EtapasObra';
+import { EtapasObra } from '../../dto/EtapasObra';
 
 @Injectable()
 export class OrcamentoService {

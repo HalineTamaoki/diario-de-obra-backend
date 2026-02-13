@@ -1,8 +1,8 @@
-import { Execucao } from 'src/modules/execucao/entity/execucao.entity';
-import { Finalizacao } from 'src/modules/finalizacao/entity/finalizacao.entity';
-import { Ideia } from 'src/modules/ideacao/entity/ideia.entity';
-import { Obra } from 'src/modules/obra/entity/obra.entity';
-import { Orcamento } from 'src/modules/orcamento/entity/orcamento.entity';
+import { Execucao } from '../../execucao/entity/execucao.entity';
+import { Finalizacao } from '../../finalizacao/entity/finalizacao.entity';
+import { Ideia } from '../../ideacao/entity/ideia.entity';
+import { Obra } from '../../obra/entity/obra.entity';
+import { Orcamento } from '../../orcamento/entity/orcamento.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
