@@ -18,7 +18,16 @@ export class Orcamento {
   @Column({ type: 'varchar', length: 255, nullable: true })
   empresa: string;
 
-  @Column({ type: 'decimal', precision: 12, scale: 2, nullable: true })
+  @Column({
+    type: 'decimal',
+    precision: 12,
+    scale: 2,
+    nullable: true,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => (value ? parseFloat(value) : null), 
+    },
+  })
   valor: number;
 
   @Column({ type: 'timestamptz', nullable: true })
