@@ -7,6 +7,6 @@ enum UltimaEtapa {
     FINALIZACAO = 4
 }
 
-export class ItemObraDto extends IdNome {
+export type ItemObraDto = IdNome & {
     ultimaEtapa: UltimaEtapa;
 }

@@ -1,5 +1,5 @@
 import { IdNome } from "../../../dto/idNome";
 
-export class ObraDto extends IdNome {
+export type ObraDto = IdNome & {
     porcentagem: number;
 }
