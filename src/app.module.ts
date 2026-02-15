@@ -28,6 +28,9 @@ import { UserModule } from './modules/usuario/user.module';
         database: configService.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: false,
+        ssl: {
+          rejectUnauthorized: false 
+        },
       }),
       inject: [ConfigService],
     }),
