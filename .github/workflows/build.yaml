@@ -35,19 +35,31 @@ jobs:
           username: ec2-user
           key: ${{ secrets.KEY }}
           script: |
-            cd ~
+            set -e
 
+            # Entra na home
+            cd /home/ec2-user
+
+            # Se a pasta não existe, clona. Se existe, limpa e atualiza.
             if [ ! -d "diario-de-obra-backend" ]; then
-              git clone https://github.com/HalineTamaoki/diario-de-obra-backend/
+              echo "Clonando repositório..."
+              git clone https://github.com/HalineTamaoki/diario-de-obra-backend.git
               cd diario-de-obra-backend
             else
+              echo "Pasta encontrada, atualizando..."
               cd diario-de-obra-backend
-              git pull origin main
+              git fetch --all
+              git reset --hard origin/main
             fi
 
+            # Instalação e Build
+            echo "Instalando dependências..."
             npm install
+            
+            echo "Gerando build..."
             npm run build
             
+            # Exporta variáveis de ambiente
             export DB_HOST=${{ secrets.DATABASE_HOST }}
             export DB_PORT=5432
             export DB_USERNAME=postgres
@@ -55,6 +67,7 @@ jobs:
             export DB_DATABASE=diario_obra
             export JWT_SECRET=${{ secrets.JWT_SECRET }}
             
-            pm2 restart "diario-backend" --update-env || pm2 start dist/main.js --name "diario-backend"
-            
+            # Reinicia o processo no PM2
+            echo "Iniciando aplicação com PM2..."
+            pm2 restart diario-backend --update-env || pm2 start dist/main.js --name "diario-backend"
             pm2 save
