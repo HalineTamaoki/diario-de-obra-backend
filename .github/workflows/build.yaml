@@ -2,6 +2,7 @@ name: Deploy Backend
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -44,7 +45,7 @@ jobs:
             DB_HOST=localhost \
             DB_PORT=5432 \
             DB_USERNAME=postgres \
-            DB_PASSWORD=postgres \
+            DB_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
             DB_DATABASE=diario_obra \
             JWT_SECRET=${{ secrets.JWT_SECRET }} \
             DATABASE_URL=${{ secrets.DATABASE_URL }} \
@@ -52,7 +53,7 @@ jobs:
             DB_HOST=localhost \
             DB_PORT=5432 \
             DB_USERNAME=postgres \
-            DB_PASSWORD=postgres \
+            DB_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
             DB_DATABASE=diario_obra \
             JWT_SECRET=${{ secrets.JWT_SECRET }} \
             DATABASE_URL=${{ secrets.DATABASE_URL }} \
