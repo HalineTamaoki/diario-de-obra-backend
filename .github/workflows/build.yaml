@@ -1,0 +1,59 @@
+name: Deploy Backend
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies and run tests
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_DATABASE: diario_obra
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: |
+          npm install
+          npm run test:cov
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            cd ~/seu-repositorio || git clone https://github.com/seu-user/repo.git ~/seu-repositorio
+            cd ~/seu-repositorio
+            git pull origin main
+            npm install
+            npm run build
+            
+            # Reinicia o PM2 injetando todas as variáveis de ambiente necessárias
+            DB_HOST=localhost \
+            DB_PORT=5432 \
+            DB_USERNAME=postgres \
+            DB_PASSWORD=postgres \
+            DB_DATABASE=diario_obra \
+            JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            pm2 restart dist/main.js --name "nest-app" --update-env || \
+            DB_HOST=localhost \
+            DB_PORT=5432 \
+            DB_USERNAME=postgres \
+            DB_PASSWORD=postgres \
+            DB_DATABASE=diario_obra \
+            JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            pm2 start dist/main.js --name "nest-app"
