@@ -67,7 +67,9 @@ jobs:
             export DB_DATABASE=diario-obra
             export JWT_SECRET=${{ secrets.JWT_SECRET }}
             
-            # Reinicia o processo no PM2
-            echo "Iniciando aplicação com PM2..."
-            pm2 restart diario-de-obra-backend --update-env || pm2 start dist/main.js --name "diario-de-obra-backend"
+            # Tenta deletar o processo antigo para evitar conflitos, ignorando erro se não existir
+            pm2 delete diario-de-obra-backend || true
+            
+            # Inicia o processo com o nome correto e as envs carregadas
+            pm2 start dist/main.js --name "diario-de-obra-backend" --update-env
             pm2 save
