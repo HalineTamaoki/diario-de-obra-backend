@@ -64,10 +64,10 @@ jobs:
             export DB_PORT=5432
             export DB_USERNAME=postgres
             export DB_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
-            export DB_DATABASE=diario_obra
+            export DB_DATABASE=diario-obra
             export JWT_SECRET=${{ secrets.JWT_SECRET }}
             
             # Reinicia o processo no PM2
             echo "Iniciando aplicação com PM2..."
-            pm2 restart diario-backend --update-env || pm2 start dist/main.js --name "diario-backend"
+            pm2 restart diario-obra-backend --update-env || pm2 start dist/main.js --name "diario-obra-backend"
             pm2 save
