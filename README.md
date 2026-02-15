@@ -15,32 +15,32 @@ O Diário de Obra é uma aplicação Nest.js, projetada para suportar a interfac
 
 1. **Clone o repositório:**
 
-    ```bash
-    git clone https://github.com/seu-usuario/diario-de-obra-backend.git
-    cd diario-de-obra-backend
-    ```
+```bash
+git clone https://github.com/seu-usuario/diario-de-obra-backend.git
+cd diario-de-obra-backend
+```
 
 2. **Instale as dependências:**
 
-    ```bash
-    npm install
-    # ou
-    yarn install
-    ```
+```bash
+npm install
+# ou
+yarn install
+```
 
 3. **Configure as variáveis de ambiente:**
 
-    - Renomeie `.env.example` para `.env` (caso exista) ou crie um arquivo `.env` na raiz do projeto.
-    - Exemplo de variáveis necessárias:
+Renomeie `.env.example` para `.env` (caso exista) ou crie um arquivo `.env` na raiz do projeto.
+Exemplo de variáveis necessárias:
 
-       ```env
-       DB_HOST=localhost
-       DB_PORT=5432
-       DB_USERNAME=postgres
-       DB_PASSWORD=postgres
-       DB_DATABASE=diario_obra
-       JWT_SECRET=sua_chave_secreta
-       ```
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=diario_obra
+JWT_SECRET=sua_chave_secreta
+```
        
 ---
 
