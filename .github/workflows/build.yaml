@@ -67,7 +67,7 @@ jobs:
             export DB_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
             export DB_DATABASE=postgres
             export JWT_SECRET=${{ secrets.JWT_SECRET }}
-            export BASE_URL: ${{ vars.BASE_URL }}
+            export BASE_URL=${{ vars.BASE_URL }}
 
             # Tenta deletar o processo antigo para evitar conflitos, ignorando erro se não existir
             pm2 delete diario-de-obra-backend || true
