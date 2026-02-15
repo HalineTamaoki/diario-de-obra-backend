@@ -1,82 +1,13 @@
-# Diário de Obra Backend
+# Diário de Obra 🚧 - Backend
 
-Sistema backend desenvolvido em Nest.js para gerenciamento de obras, permitindo o controle de etapas, ideias, orçamentos, execuções e finalizações de projetos de construção civil.
-
----
-
-## Índice
-
-- [Descrição](#descrição)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Instalação](#instalação)
-- [Execução](#execução)
-- [Testes](#testes)
-- [Cobertura de Testes](#cobertura-de-testes)
-- [Documentação da API](#documentação-da-api)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Licença](#licença)
+O Diário de Obra é uma aplicação Nest.js, projetada para suportar a interface de diário de obra, incluindo gerenciar os dados do banco de dados.es de projetos de construção civil. O sistema permite o cadastro de usuários, gerenciamento de obras, controle de etapas (ideação, orçamento, execução, finalização), registro de ideias, orçamentos, execuções e finalizações, além de autenticação JWT.
 
 ---
 
-## Descrição
+## **Pré-requisitos**
 
-O **Diário de Obra Backend** é uma API RESTful desenvolvida em Nest.js para auxiliar no acompanhamento e gestão de obras. O sistema permite o cadastro de usuários, gerenciamento de obras, controle de etapas (ideação, orçamento, execução, finalização), registro de ideias, orçamentos, execuções e finalizações, além de autenticação JWT.
-
----
-
-## Tecnologias Utilizadas
-
-- [Nest.js](https://nestjs.com/) — Framework Node.js para aplicações escaláveis
-- [TypeORM](https://typeorm.io/) — ORM para TypeScript e JavaScript
-- [PostgreSQL](https://www.postgresql.org/) — Banco de dados relacional
-- [Swagger](https://swagger.io/) — Documentação interativa da API
-- [Jest](https://jestjs.io/) — Testes unitários e de integração
-- [bcrypt](https://www.npmjs.com/package/bcrypt) — Hash de senhas
-- [Passport](http://www.passportjs.org/) — Autenticação
-- [class-validator](https://github.com/typestack/class-validator) — Validação de DTOs
-- [dotenv](https://www.npmjs.com/package/dotenv) — Variáveis de ambiente
-
----
-
-## Instalação
-
-# Diário de Obra Backend
-
-Sistema backend desenvolvido em Nest.js para gerenciamento de obras, permitindo o controle de etapas, ideias, orçamentos, execuções e finalizações de projetos de construção civil.
-
----
-
-## Índice
-
-- [Descrição](#descrição)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Instalação](#instalação)
-- [Execução](#execução)
-- [Testes](#testes)
-- [Cobertura de Testes](#cobertura-de-testes)
-- [Documentação da API](#documentação-da-api)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Licença](#licença)
-
----
-
-## Descrição
-
-O **Diário de Obra Backend** é uma API RESTful desenvolvida em Nest.js para auxiliar no acompanhamento e gestão de obras. O sistema permite o cadastro de usuários, gerenciamento de obras, controle de etapas (ideação, orçamento, execução, finalização), registro de ideias, orçamentos, execuções e finalizações, além de autenticação JWT.
-
----
-
-## Tecnologias Utilizadas
-
-- [Nest.js](https://nestjs.com/) — Framework Node.js para aplicações escaláveis
-- [TypeORM](https://typeorm.io/) — ORM para TypeScript e JavaScript
-- [PostgreSQL](https://www.postgresql.org/) — Banco de dados relacional
-- [Swagger](https://swagger.io/) — Documentação interativa da API
-- [Jest](https://jestjs.io/) — Testes unitários e de integração
-- [bcrypt](https://www.npmjs.com/package/bcrypt) — Hash de senhas
-- [Passport](http://www.passportjs.org/) — Autenticação
-- [class-validator](https://github.com/typestack/class-validator) — Validação de DTOs
-- [dotenv](https://www.npmjs.com/package/dotenv) — Variáveis de ambiente
+- **Node.js** (v18 ou maior)
+- **npm** (v9+) ou **yarn** (v1+)
 
 ---
 
@@ -110,49 +41,34 @@ O **Diário de Obra Backend** é uma API RESTful desenvolvida em Nest.js para au
        DB_DATABASE=diario_obra
        JWT_SECRET=sua_chave_secreta
        ```
-
+       
 ---
 
-## Execução
+## **Executando o Projeto**
 
-- **Ambiente de desenvolvimento:**
+### Iniciar Servidor de Desenvolvimento
 
-   ```bash
-   npm run start:dev
-   # ou
-   yarn start:dev
-   ```
+```bash
+npm run start
+# ou
+yarn start
+```
 
-- **Ambiente de produção:**
+### Gerar Build para Produção
 
-   ```bash
-   npm run start:prod
-   # ou
-   yarn start:prod
-   ```
+```bash
+npm run build
+```
 
-- **Compilar o projeto:**
 
-   ```bash
-   npm run build
-   ```
-
----
-
-## Testes
+### Executar testes unitários
 
 - **Testes unitários:**
 
-   ```bash
-   npm run test
-   ```
-
-- **Testes end-to-end:**
-
-   ```bash
-   npm run test:e2e
-   ```
-
+```bash
+npm run test
+```
+   
 ---
 
 ## Cobertura de Testes
@@ -165,44 +81,53 @@ O **Diário de Obra Backend** é uma API RESTful desenvolvida em Nest.js para au
 
 - O relatório estará disponível na pasta `coverage/`.
 
----
-
-## Documentação da API
-
-- Após iniciar o projeto, acesse a documentação interativa (Swagger) em:
-
-   ```
-   http://localhost:3000/api
-   ```
-
-   *(Configure a rota conforme implementado no projeto)*
 
 ---
 
 ## Estrutura do Projeto
 
-```text
-src/
-   app.module.ts
-   main.ts
-   modules/
-      auth/
-      usuario/
-      obra/
-      itemObra/
-      ideacao/
-      orcamento/
-      execucao/
-      finalizacao/
-   dto/
-test/
-.env
-package.json
-README.md
 ```
+diario-de-obra-backend/
+src/                  # Código-fonte principal da aplicação
+   app.module.ts      # Módulo raiz do Nest.js
+   main.ts            # Ponto de entrada da aplicação
+   modules/           # Módulos de domínio do sistema
+      auth/           # Autenticação e autorização (JWT, guards, etc.)
+      usuario/        # Gerenciamento de usuários
+      obra/           # Gerenciamento de obras
+      itemObra/       # Itens relacionados à obra
+      ideacao/        # Etapa de ideação do projeto
+      orcamento/      # Etapa de orçamento do projeto
+      execucao/       # Etapa de execução do projeto
+      finalizacao/    # Etapa de finalização do projeto
+   dto/               # Data Transfer Objects compartilhados
+test/                 # Testes automatizados (unitários e e2e)
+.env                  # Variáveis de ambiente (não versionado)
+package.json          # Gerenciador de dependências e scripts
+README.md             # Documentação do projeto
+```
+
+---
+
+## Tecnologias Utilizadas
+
+- 🦩 [Nest.js](https://nestjs.com/) — Framework Node.js para aplicações escaláveis
+- 🗄️ [TypeORM](https://typeorm.io/) — ORM para TypeScript e JavaScript
+- 🐘 [PostgreSQL](https://www.postgresql.org/) — Banco de dados relacional
+- 📖 [Swagger](https://swagger.io/) — Documentação interativa da API
+- 🃏 [Jest](https://jestjs.io/) — Testes unitários e de integração
+- 🔒 [bcrypt](https://www.npmjs.com/package/bcrypt) — Hash de senhas
+- 🛂 [Passport](http://www.passportjs.org/) — Autenticação
+- ✅ [class-validator](https://github.com/typestack/class-validator) — Validação de DTOs
+- 🌱 [dotenv](https://www.npmjs.com/package/dotenv) — Variáveis de ambiente
 
 ---
 
 ## Licença
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
+Este projeto está sob a licença **MIT**.  
+Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+
+**Desenvolvido por Haline Tamaoki**
