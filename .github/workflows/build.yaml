@@ -64,7 +64,7 @@ jobs:
             export DB_PORT=5432
             export DB_USERNAME=postgres
             export DB_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
-            export DB_DATABASE=diario-obra
+            export DB_DATABASE=postgres
             export JWT_SECRET=${{ secrets.JWT_SECRET }}
             
             # Tenta deletar o processo antigo para evitar conflitos, ignorando erro se não existir
