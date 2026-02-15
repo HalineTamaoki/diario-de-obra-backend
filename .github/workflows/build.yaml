@@ -69,5 +69,5 @@ jobs:
             
             # Reinicia o processo no PM2
             echo "Iniciando aplicação com PM2..."
-            pm2 restart diario-obra-backend --update-env || pm2 start dist/main.js --name "diario-obra-backend"
+            pm2 restart diario-de-obra-backend --update-env || pm2 start dist/main.js --name "diario-de-obra-backend"
             pm2 save
