@@ -114,7 +114,6 @@ README.md             # Documentação do projeto
 - 🦩 [Nest.js](https://nestjs.com/) — Framework Node.js para aplicações escaláveis
 - 🗄️ [TypeORM](https://typeorm.io/) — ORM para TypeScript e JavaScript
 - 🐘 [PostgreSQL](https://www.postgresql.org/) — Banco de dados relacional
-- 📖 [Swagger](https://swagger.io/) — Documentação interativa da API
 - 🃏 [Jest](https://jestjs.io/) — Testes unitários e de integração
 - 🔒 [bcrypt](https://www.npmjs.com/package/bcrypt) — Hash de senhas
 - 🛂 [Passport](http://www.passportjs.org/) — Autenticação
