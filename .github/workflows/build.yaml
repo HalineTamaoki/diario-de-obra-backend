@@ -24,6 +24,7 @@ jobs:
           DB_PASSWORD: postgres
           DB_DATABASE: diario_obra
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          BASE_URL: ${{ vars.BASE_URL }}
         run: |
           npm install
           npm run test:cov || echo "Aviso: Testes falharam, verifique se o banco de testes é necessário."
@@ -66,7 +67,8 @@ jobs:
             export DB_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
             export DB_DATABASE=postgres
             export JWT_SECRET=${{ secrets.JWT_SECRET }}
-            
+            export BASE_URL: ${{ vars.BASE_URL }}
+
             # Tenta deletar o processo antigo para evitar conflitos, ignorando erro se não existir
             pm2 delete diario-de-obra-backend || true
             
