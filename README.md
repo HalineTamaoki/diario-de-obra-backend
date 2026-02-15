@@ -73,13 +73,13 @@ npm run test
 
 ## Cobertura de Testes
 
-- **Gerar relatório de cobertura:**
+**Gerar relatório de cobertura:**
 
-   ```bash
-   npm run test:cov
-   ```
+```bash
+npm run test:cov
+```
 
-- O relatório estará disponível na pasta `coverage/`.
+O relatório estará disponível na pasta `coverage/`.
 
 
 ---
